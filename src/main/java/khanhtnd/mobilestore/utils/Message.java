@@ -12,6 +12,7 @@ public enum Message {
     MSG_201(201, "Create success."),
     MSG_202(202, "Get object success."),
     MSG_400(400, "Unexpected exception"),
+    MSG_410(410, "Object has existed."),
     MSG_404(404, "Not found");
     private final int code;
     private final String description;

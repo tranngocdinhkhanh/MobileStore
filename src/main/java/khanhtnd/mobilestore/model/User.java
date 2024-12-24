@@ -46,6 +46,7 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
+        role = Role.USER;
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }

@@ -2,6 +2,7 @@ package khanhtnd.mobilestore.exception.handler;
 
 import khanhtnd.mobilestore.dto.response.Response;
 import khanhtnd.mobilestore.exception.CustomException;
+import khanhtnd.mobilestore.exception.common.DuplicateException;
 import khanhtnd.mobilestore.exception.common.InvalidImageException;
 import khanhtnd.mobilestore.exception.common.NotFoundException;
 import khanhtnd.mobilestore.utils.Message;
@@ -43,6 +44,16 @@ public class GlobalExceptionHandler {
                         .code(ex.getDescription().getCode())
                         .description(ex.getDescription().getDescription())
                         .data(ex.getId())
+                        .build());
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<Response<String>> handleDuplicateException(DuplicateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Response.<String>builder()
+                        .code(ex.getDescription().getCode())
+                        .description(ex.getDescription().getDescription())
+                        .data(ex.getObj())
                         .build());
     }
     @ExceptionHandler(CustomException.class)
