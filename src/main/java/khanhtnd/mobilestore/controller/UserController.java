@@ -1,8 +1,10 @@
 package khanhtnd.mobilestore.controller;
 
+import khanhtnd.mobilestore.dto.request.UserLoginRequest;
 import khanhtnd.mobilestore.dto.request.UserRegister;
+import khanhtnd.mobilestore.dto.response.AuthenticationResponse;
 import khanhtnd.mobilestore.dto.response.Response;
-import khanhtnd.mobilestore.model.User;
+
 import khanhtnd.mobilestore.service.UserServiceAdvice;
 import khanhtnd.mobilestore.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ public class UserController {
     @Autowired
     public UserController(UserServiceAdvice userServiceAdvice) {
         this.userServiceAdvice = userServiceAdvice;
+
     }
 
     @PostMapping("/register")
@@ -38,6 +41,21 @@ public class UserController {
                 .build();
 
         return ResponseEntity.created(location).body(response);
+
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Response<AuthenticationResponse > >login(@RequestBody UserLoginRequest userLoginRequest) {
+            var result = userServiceAdvice.login(userLoginRequest.getUsername(), userLoginRequest.getPassword());
+
+            Response<AuthenticationResponse> response = Response.<AuthenticationResponse>builder()
+                    .code(Message.MSG_202.getCode())
+                    .description(Message.MSG_202.getDescription())
+                    .data(result)
+                    .build();
+
+            return ResponseEntity.ok(response);
+
 
     }
 }
