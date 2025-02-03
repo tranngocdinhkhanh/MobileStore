@@ -19,7 +19,7 @@ public class CartController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addToCart(
-            @RequestParam int userId,
+            @RequestParam(required = false, defaultValue = "0") int userId,
             @RequestParam int productId,
                 @RequestParam int quantity) {
         cartServiceAdvance.add(userId, productId, quantity);
@@ -27,7 +27,7 @@ public class CartController {
     }
 
     @GetMapping("/view")
-    public ResponseEntity<Response<CartResponse>> viewCart(@RequestParam int userId) {
+    public ResponseEntity<Response<CartResponse>> viewCart(@RequestParam(required = false, defaultValue = "0") int userId) {
             CartResponse cartResponse = cartServiceAdvance.viewCart(userId);
             return ResponseEntity.ok(
                     Response.<CartResponse>builder()
@@ -40,7 +40,7 @@ public class CartController {
 
 
     @DeleteMapping("/item")
-    public ResponseEntity<Response<Void>> removeCartItem(@RequestParam int userId, @RequestParam int productId) {
+    public ResponseEntity<Response<Void>> removeCartItem(@RequestParam(required = false, defaultValue = "0") int userId, @RequestParam int productId) {
 
         cartServiceAdvance.removeCartItem(userId, productId);
         return ResponseEntity.ok(
@@ -51,7 +51,7 @@ public class CartController {
         );
     }
     @DeleteMapping("/clear")
-    public ResponseEntity<Response<Void>> clearCart(@RequestParam int userId) {
+    public ResponseEntity<Response<Void>> clearCart(@RequestParam(required = false, defaultValue = "0") int userId) {
         cartServiceAdvance.clearCart(userId);
             return ResponseEntity.ok(
                     Response.<Void>builder()

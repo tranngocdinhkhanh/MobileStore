@@ -19,6 +19,7 @@ import khanhtnd.mobilestore.utils.Message;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +48,7 @@ public class ProductServiceImpl implements CommonService<ProductResponseDto>, Pr
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public int addProduct(AddProductRequestDto productDto, List<MultipartFile> images) {
         // Tạo Product từ DTO
         Category category = categoryRepository.findById(productDto.getCategory())

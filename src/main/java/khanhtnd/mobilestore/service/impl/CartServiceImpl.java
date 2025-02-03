@@ -15,6 +15,8 @@ import khanhtnd.mobilestore.repository.UserRepository;
 import khanhtnd.mobilestore.service.CartServiceAdvance;
 import khanhtnd.mobilestore.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +40,17 @@ public class CartServiceImpl implements CartServiceAdvance {
         this.cartItemRepository = cartItemRepository;
     }
 
+    private int getUserId(int userId) {
+        if (userId != 0) {
+            var context = SecurityContextHolder.getContext();
+            return Integer.parseInt(context.getAuthentication().getName());
+        } else return 0;
+    }
+
     @Override
-    public void add(int userId, int productId, int quantity) {
+    @PreAuthorize("hasRole('USER')")
+    public void add(int id, int productId, int quantity) {
+        int userId = getUserId(id);
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Message.MSG_404, userId));
 
         Product product = productRepository.findById(productId)
@@ -88,7 +99,8 @@ public class CartServiceImpl implements CartServiceAdvance {
     }
 
     @Override
-    public CartResponse viewCart(int userId) {
+    public CartResponse viewCart(int id) {
+        int userId = getUserId(id);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Message.MSG_404, userId));
 
@@ -120,7 +132,8 @@ public class CartServiceImpl implements CartServiceAdvance {
     }
 
     @Override
-    public void removeCartItem(int userId, int productId) {
+    public void removeCartItem(int id, int productId) {
+        int userId = getUserId(id);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Message.MSG_404, userId));
         Cart cart = cartRepository.findByUserId(userId)
@@ -143,7 +156,8 @@ public class CartServiceImpl implements CartServiceAdvance {
 
     @Transactional
     @Override
-    public void clearCart(int userId) {
+    public void clearCart(int id) {
+        int userId = getUserId(id);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Message.MSG_404, userId));
         Cart cart = cartRepository.findByUserId(userId)

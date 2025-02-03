@@ -10,6 +10,7 @@ import khanhtnd.mobilestore.service.ImageServiceAdvance;
 import khanhtnd.mobilestore.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,7 @@ public class ImageServiceImpl implements CommonService<Image>, ImageServiceAdvan
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public int saveImage(MultipartFile image) {
         if (image == null || image.isEmpty()) {
             return -1; // Trả về giá trị mặc định nếu không có ảnh hợp lệ

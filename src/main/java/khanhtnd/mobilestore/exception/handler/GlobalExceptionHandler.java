@@ -4,7 +4,6 @@ import khanhtnd.mobilestore.dto.response.Response;
 import khanhtnd.mobilestore.exception.CustomException;
 import khanhtnd.mobilestore.exception.common.DuplicateException;
 import khanhtnd.mobilestore.exception.common.InvalidImageException;
-import khanhtnd.mobilestore.exception.common.NoResourceFoundException;
 import khanhtnd.mobilestore.exception.common.NotFoundException;
 import khanhtnd.mobilestore.utils.Message;
 import org.springframework.http.HttpStatus;
@@ -65,11 +64,7 @@ public class GlobalExceptionHandler {
                         .description(ex.getDescription().getDescription())
                         .build());
     }
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<String> handleNoResourceFound(NoResourceFoundException ex) {
-        // Trả về thông báo và mã lỗi khi gặp ngoại lệ
-        return new ResponseEntity<>("Resource not found. HTTP Method: " + ex.getHttpMethod(), HttpStatus.NOT_FOUND);
-    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Response<Exception>> handleGenericException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

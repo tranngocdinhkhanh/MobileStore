@@ -63,22 +63,23 @@ public class UserServiceImpl implements UserServiceAdvice {
         if (!passwordEncoder.matches(password, userOptional.get().getPasswordHash())) {
             throw new NotFoundException(Message.MSG_406, 0);
         }
-        var token = generateToken(username);
+        var token = generateToken(userOptional.get());
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
                 .build();
     }
 
-    private String generateToken(String username) {
+    private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("mobile store")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
+                .claim("scope", user.getRole().name())
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
